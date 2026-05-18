@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Expense Tracker</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #4f46e5, #06b6d4);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .container {
+      background: white;
+      width: 100%;
+      max-width: 450px;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 25px;
+      color: #1e293b;
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 15px;
+      margin-bottom: 6px;
+      color: #334155;
+    }
+
+    input,
+    select,
+    button {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid #cbd5e1;
+      font-size: 15px;
+    }
+
+    input:focus,
+    select:focus {
+      outline: none;
+      border-color: #4f46e5;
+      box-shadow: 0 0 5px rgba(79,70,229,0.4);
+    }
+
+    button {
+      margin-top: 25px;
+      background: linear-gradient(135deg, #4f46e5, #06b6d4);
+      color: white;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
+    #status {
+      margin-top: 15px;
+      text-align: center;
+      font-weight: bold;
+      color: #16a34a;
+    }
+
+    .footer {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 12px;
+      color: #64748b;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <h2>💰 Expense Tracker</h2>
+
+  <form id="expenseForm">
+
+    <label>User</label>
+    <select name="person" id="person" required>
+      <option value="">Loading Users...</option>
+    </select>
+
+    <label>Expense Category</label>
+    <select name="category" id="category" required>
+      <option value="">Loading Categories...</option>
+    </select>
+
+    <label>Mode of Payment</label>
+    <select name="paymentMode" id="paymentMode" required>
+      <option value="">Loading Payment Modes...</option>
+    </select>
+
+    <label>Amount</label>
+    <input
+      type="number"
+      name="amount"
+      placeholder="Enter Amount"
+      required
+    />
+
+    <label>Notes</label>
+    <input
+      type="text"
+      name="notes"
+      placeholder="Optional Notes"
+    />
+
+    <button type="submit">Save Expense</button>
+
+  </form>
+
+  <p id="status"></p>
+
+  <div class="footer">
+    Shared Expense Tracker
+  </div>
+
+</div>
+
+<script>
+
+  // ============================
+  // Apps Script URLs
+  // ============================
+
+  const submitURL =
+    "https://script.google.com/macros/s/AKfycbzS8RtuT6RP6DaCYK90Bj6hkmQeStrA5JPQNmDXi12NwYKMM6ktIDQjF9xWh3AU1mSLLw/exec";
+
+  // NEW CONFIG API URL
+  // Replace with your Config Apps Script deployment URL
+  const configURL =
+    "https://script.google.com/macros/s/AKfycby0dRgT6dIV7N14H9J7ejl3prIrmbgRWsNMqktV89-2kX1c5L3_0UIZQS5cJXtLHqvUqw/exec";
+
+
+  // ============================
+  // Load Dropdown Data
+  // ============================
+
+  async function loadDropdowns() {
+
+    try {
+
+      const response = await fetch(configURL);
+      const data = await response.json();
+
+      populateDropdown("person", data.users);
+      populateDropdown("category", data.categories);
+      populateDropdown("paymentMode", data.paymentModes);
+
+    } catch (error) {
+
+      console.error(error);
+
+      document.getElementById("status").innerText =
+        "Unable to load dropdown data";
+
+    }
+
+  }
+
+
+  // ============================
+  // Populate Dropdown Helper
+  // ============================
+
+  function populateDropdown(id, values) {
+
+    const dropdown = document.getElementById(id);
+
+    dropdown.innerHTML = '<option value="">Select</option>';
+
+    values.forEach(value => {
+
+      const option = document.createElement("option");
+
+      option.value = value;
+      option.textContent = value;
+
+      dropdown.appendChild(option);
+
+    });
+
+  }
+
+
+  // ============================
+  // Form Submit
+  // ============================
+
+  document
+    .getElementById("expenseForm")
+    .addEventListener("submit", async (e) => {
+
+      e.preventDefault();
+
+      const formData =
+        Object.fromEntries(new FormData(e.target));
+
+      document.getElementById("status").innerText =
+        "Saving Expense...";
+
+      try {
+
+        await fetch(submitURL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(formData)
+        });
+
+        document.getElementById("status").innerText =
+          "✅ Expense Saved Successfully";
+
+        e.target.reset();
+
+      } catch (err) {
+
+        console.error(err);
+
+        document.getElementById("status").innerText =
+          "❌ Error saving expense";
+
+      }
+
+    });
+
+
+  // ============================
+  // Initial Load
+  // ============================
+
+  loadDropdowns();
+
+</script>
+
+</body>
+</html>
