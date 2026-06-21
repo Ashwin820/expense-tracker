@@ -1,96 +1,104 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Expense Tracker</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Expense Tracker</title>
 
-  <style>
-    * {
-      box-sizing: border-box;
-      font-family: Arial, sans-serif;
-    }
+<style>
 
-    body {
-      margin: 0;
-      padding: 0;
-      background: linear-gradient(135deg, #4f46e5, #06b6d4);
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
-    }
+* {
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
 
-    .container {
-      background: white;
-      width: 100%;
-      max-width: 450px;
-      border-radius: 20px;
-      padding: 30px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-    }
+body {
+  margin: 0;
+  padding: 20px;
+  background: linear-gradient(135deg, #4f46e5, #06b6d4);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
-    h2 {
-      text-align: center;
-      margin-bottom: 25px;
-      color: #1e293b;
-    }
+.container {
+  background: white;
+  width: 100%;
+  max-width: 500px;
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
 
-    label {
-      font-weight: bold;
-      display: block;
-      margin-top: 15px;
-      margin-bottom: 6px;
-      color: #334155;
-    }
+h2 {
+  text-align: center;
+  margin-bottom: 25px;
+  color: #1e293b;
+}
 
-    input,
-    select,
-    button {
-      width: 100%;
-      padding: 12px;
-      border-radius: 10px;
-      border: 1px solid #cbd5e1;
-      font-size: 15px;
-    }
+label {
+  display: block;
+  margin-top: 15px;
+  margin-bottom: 6px;
+  font-weight: bold;
+  color: #334155;
+}
 
-    input:focus,
-    select:focus {
-      outline: none;
-      border-color: #4f46e5;
-      box-shadow: 0 0 5px rgba(79,70,229,0.4);
-    }
+input,
+select,
+button {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #cbd5e1;
+  font-size: 15px;
+}
 
-    button {
-      margin-top: 25px;
-      background: linear-gradient(135deg, #4f46e5, #06b6d4);
-      color: white;
-      font-weight: bold;
-      border: none;
-      cursor: pointer;
-      transition: 0.3s;
-    }
+input:focus,
+select:focus {
+  outline: none;
+  border-color: #4f46e5;
+  box-shadow: 0 0 5px rgba(79,70,229,0.4);
+}
 
-    button:hover {
-      opacity: 0.9;
-      transform: translateY(-1px);
-    }
+button {
+  margin-top: 25px;
+  border: none;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  background: linear-gradient(135deg, #4f46e5, #06b6d4);
+  transition: 0.3s;
+}
 
-    #status {
-      margin-top: 15px;
-      text-align: center;
-      font-weight: bold;
-      color: #16a34a;
-    }
+button:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
 
-    .footer {
-      margin-top: 20px;
-      text-align: center;
-      font-size: 12px;
-      color: #64748b;
-    }
-  </style>
+#status {
+  margin-top: 15px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.footer {
+  margin-top: 20px;
+  text-align: center;
+  color: #64748b;
+  font-size: 12px;
+}
+
+.success {
+  color: #16a34a;
+}
+
+.error {
+  color: #dc2626;
+}
+
+</style>
 </head>
 
 <body>
@@ -116,11 +124,27 @@
       <option value="">Loading Payment Modes...</option>
     </select>
 
+    <label>Expense Date</label>
+
+    <select id="dateOption" name="dateOption" required>
+      <option value="today" selected>Today</option>
+      <option value="yesterday">Yesterday</option>
+      <option value="custom">Custom Date</option>
+    </select>
+
+    <input
+      type="date"
+      id="customDate"
+      name="expenseDate"
+      style="display:none; margin-top:10px;"
+    />
+
     <label>Amount</label>
     <input
       type="number"
       name="amount"
       placeholder="Enter Amount"
+      step="0.01"
       required
     />
 
@@ -131,7 +155,9 @@
       placeholder="Optional Notes"
     />
 
-    <button type="submit">Save Expense</button>
+    <button type="submit">
+      Save Expense
+    </button>
 
   </form>
 
@@ -145,119 +171,252 @@
 
 <script>
 
-  // ============================
-  // Apps Script URLs
-  // ============================
+// ===================================
+// Apps Script URLs
+// ===================================
 
-  const submitURL =
-    "https://script.google.com/macros/s/AKfycbzS8RtuT6RP6DaCYK90Bj6hkmQeStrA5JPQNmDXi12NwYKMM6ktIDQjF9xWh3AU1mSLLw/exec";
+const submitURL =
+"https://script.google.com/macros/s/AKfycbzS8RtuT6RP6DaCYK90Bj6hkmQeStrA5JPQNmDXi12NwYKMM6ktIDQjF9xWh3AU1mSLLw/exec";
 
-  // NEW CONFIG API URL
-  // Replace with your Config Apps Script deployment URL
-  const configURL =
-    "https://script.google.com/macros/s/AKfycby0EW_ORUu2uVtzyFUkvMx-uXty1KCe9QIYCptiKNWEB-BAKoEih8AeJnsqcZCHtpBPFQ/exec";
+const configURL =
+"https://script.google.com/macros/s/AKfycby0EW_ORUu2uVtzyFUkvMx-uXty1KCe9QIYCptiKNWEB-BAKoEih8AeJnsqcZCHtpBPFQ/exec";
 
 
-  // ============================
-  // Load Dropdown Data
-  // ============================
+// ===================================
+// Load Dropdowns
+// ===================================
 
-  async function loadDropdowns() {
+async function loadDropdowns() {
 
-    try {
+  try {
 
-      const response = await fetch(configURL);
-      const data = await response.json();
+    const response =
+      await fetch(configURL);
 
-      populateDropdown("person", data.users);
-      populateDropdown("category", data.categories);
-      populateDropdown("paymentMode", data.paymentModes);
+    const data =
+      await response.json();
 
-    } catch (error) {
+    populateDropdown(
+      "person",
+      data.users
+    );
 
-      console.error(error);
+    populateDropdown(
+      "category",
+      data.categories
+    );
 
-      document.getElementById("status").innerText =
-        "Unable to load dropdown data";
+    populateDropdown(
+      "paymentMode",
+      data.paymentModes
+    );
+
+  }
+  catch(error) {
+
+    console.error(error);
+
+    document.getElementById("status")
+      .innerText =
+      "Unable to load dropdown data";
+
+  }
+
+}
+
+
+// ===================================
+// Populate Dropdown Helper
+// ===================================
+
+function populateDropdown(id, values) {
+
+  const dropdown =
+    document.getElementById(id);
+
+  dropdown.innerHTML =
+    '<option value="">Select</option>';
+
+  values.forEach(value => {
+
+    const option =
+      document.createElement("option");
+
+    option.value = value;
+    option.textContent = value;
+
+    dropdown.appendChild(option);
+
+  });
+
+}
+
+
+// ===================================
+// Date Handling
+// ===================================
+
+const dateOption =
+  document.getElementById("dateOption");
+
+const customDate =
+  document.getElementById("customDate");
+
+dateOption.addEventListener(
+  "change",
+  function() {
+
+    if(this.value === "custom") {
+
+      customDate.style.display =
+        "block";
+
+      customDate.required = true;
+
+    }
+    else {
+
+      customDate.style.display =
+        "none";
+
+      customDate.required = false;
 
     }
 
   }
+);
 
 
-  // ============================
-  // Populate Dropdown Helper
-  // ============================
+// ===================================
+// Form Submit
+// ===================================
 
-  function populateDropdown(id, values) {
+document
+.getElementById("expenseForm")
+.addEventListener(
+"submit",
+async (e) => {
 
-    const dropdown = document.getElementById(id);
+  e.preventDefault();
 
-    dropdown.innerHTML = '<option value="">Select</option>';
+  const formData =
+    Object.fromEntries(
+      new FormData(e.target)
+    );
 
-    values.forEach(value => {
+  let expenseDate;
 
-      const option = document.createElement("option");
+  switch(formData.dateOption) {
 
-      option.value = value;
-      option.textContent = value;
+    case "today":
 
-      dropdown.appendChild(option);
+      expenseDate =
+        new Date()
+        .toISOString()
+        .split("T")[0];
 
-    });
+      break;
+
+    case "yesterday":
+
+      const yesterday =
+        new Date();
+
+      yesterday.setDate(
+        yesterday.getDate() - 1
+      );
+
+      expenseDate =
+        yesterday
+        .toISOString()
+        .split("T")[0];
+
+      break;
+
+    case "custom":
+
+      expenseDate =
+        formData.expenseDate;
+
+      break;
 
   }
 
-
-  // ============================
-  // Form Submit
-  // ============================
+  formData.expenseDate =
+    expenseDate;
 
   document
-    .getElementById("expenseForm")
-    .addEventListener("submit", async (e) => {
+    .getElementById("status")
+    .innerText =
+    "Saving Expense...";
 
-      e.preventDefault();
+  try {
 
-      const formData =
-        Object.fromEntries(new FormData(e.target));
-
-      document.getElementById("status").innerText =
-        "Saving Expense...";
-
-      try {
-
-        await fetch(submitURL, {
-          method: "POST",
-          mode: "no-cors",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify(formData)
-        });
-
-        document.getElementById("status").innerText =
-          "✅ Expense Saved Successfully";
-
-        e.target.reset();
-
-      } catch (err) {
-
-        console.error(err);
-
-        document.getElementById("status").innerText =
-          "❌ Error saving expense";
-
+    await fetch(
+      submitURL,
+      {
+        method: "POST",
+        mode: "no-cors",
+        headers: {
+          "Content-Type":
+          "application/json"
+        },
+        body:
+          JSON.stringify(
+            formData
+          )
       }
+    );
 
-    });
+    const status =
+      document.getElementById(
+        "status"
+      );
+
+    status.className =
+      "success";
+
+    status.innerText =
+      "✅ Expense Saved Successfully";
+
+    e.target.reset();
+
+    document
+      .getElementById(
+        "dateOption"
+      )
+      .value =
+      "today";
+
+    customDate.style.display =
+      "none";
+
+  }
+  catch(err) {
+
+    console.error(err);
+
+    const status =
+      document.getElementById(
+        "status"
+      );
+
+    status.className =
+      "error";
+
+    status.innerText =
+      "❌ Error Saving Expense";
+
+  }
+
+});
 
 
-  // ============================
-  // Initial Load
-  // ============================
+// ===================================
+// Initial Load
+// ===================================
 
-  loadDropdowns();
+loadDropdowns();
 
 </script>
 
