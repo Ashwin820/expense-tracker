@@ -349,7 +349,8 @@ async (e) => {
     .getElementById("status")
     .innerText =
     "Saving Expense...";
-
+  console.log("Submitting:", formData);
+  console.log("URL:", submitURL);
   try {
 
     await fetch(
