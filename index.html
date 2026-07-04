@@ -1,425 +1,375 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Expense Tracker</title>
 
-<style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-* {
-  box-sizing: border-box;
-  font-family: Arial, sans-serif;
-}
+    <title>Expense Tracker</title>
 
-body {
-  margin: 0;
-  padding: 20px;
-  background: linear-gradient(135deg, #4f46e5, #06b6d4);
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+    <link rel="stylesheet" href="style.css">
 
-.container {
-  background: white;
-  width: 100%;
-  max-width: 500px;
-  border-radius: 20px;
-  padding: 30px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-h2 {
-  text-align: center;
-  margin-bottom: 25px;
-  color: #1e293b;
-}
-
-label {
-  display: block;
-  margin-top: 15px;
-  margin-bottom: 6px;
-  font-weight: bold;
-  color: #334155;
-}
-
-input,
-select,
-button {
-  width: 100%;
-  padding: 12px;
-  border-radius: 10px;
-  border: 1px solid #cbd5e1;
-  font-size: 15px;
-}
-
-input:focus,
-select:focus {
-  outline: none;
-  border-color: #4f46e5;
-  box-shadow: 0 0 5px rgba(79,70,229,0.4);
-}
-
-button {
-  margin-top: 25px;
-  border: none;
-  color: white;
-  font-weight: bold;
-  cursor: pointer;
-  background: linear-gradient(135deg, #4f46e5, #06b6d4);
-  transition: 0.3s;
-}
-
-button:hover {
-  opacity: 0.9;
-  transform: translateY(-1px);
-}
-
-#status {
-  margin-top: 15px;
-  text-align: center;
-  font-weight: bold;
-}
-
-.footer {
-  margin-top: 20px;
-  text-align: center;
-  color: #64748b;
-  font-size: 12px;
-}
-
-.success {
-  color: #16a34a;
-}
-
-.error {
-  color: #dc2626;
-}
-
-</style>
 </head>
 
 <body>
 
-<div class="container">
+<header>
 
-  <h2>💰 Expense Tracker</h2>
+    <h1>💰 Expense Tracker</h1>
 
-  <form id="expenseForm">
+</header>
 
-    <label>User</label>
-    <select name="person" id="person" required>
-      <option value="">Loading Users...</option>
-    </select>
 
-    <label>Expense Category</label>
-    <select name="category" id="category" required>
-      <option value="">Loading Categories...</option>
-    </select>
+<!-- ============================
+        EXPENSE FORM
+============================= -->
 
-    <label>Mode of Payment</label>
-    <select name="paymentMode" id="paymentMode" required>
-      <option value="">Loading Payment Modes...</option>
-    </select>
+<section class="form-section">
 
-    <label>Expense Date</label>
+    <div class="card">
 
-    <select id="dateOption" name="dateOption" required>
-      <option value="today" selected>Today</option>
-      <option value="yesterday">Yesterday</option>
-      <option value="custom">Custom Date</option>
-    </select>
+        <h2>Add Expense</h2>
 
-    <input
-      type="date"
-      id="customDate"
-      name="expenseDate"
-      style="display:none; margin-top:10px;"
-    />
+        <form id="expenseForm">
 
-    <label>Amount</label>
-    <input
-      type="number"
-      name="amount"
-      placeholder="Enter Amount"
-      step="0.01"
-      required
-    />
+            <!-- Date -->
 
-    <label>Notes</label>
-    <input
-      type="text"
-      name="notes"
-      placeholder="Optional Notes"
-    />
+            <div class="form-group">
 
-    <button type="submit">
-      Save Expense
-    </button>
+                <label>Expense Date</label>
 
-  </form>
+                <select id="dateOption" name="dateOption">
 
-  <p id="status"></p>
+                    <option value="today" selected>Today</option>
+                    <option value="yesterday">Yesterday</option>
+                    <option value="custom">Custom Date</option>
 
-  <div class="footer">
-    Shared Expense Tracker
-  </div>
+                </select>
 
-</div>
+                <input
+                    type="date"
+                    id="customDate"
+                    name="expenseDate"
+                    style="display:none;"
+                >
 
-<script>
+            </div>
 
-// ===================================
-// Apps Script URLs
-// ===================================
+            <!-- User -->
 
-const submitURL =
-"https://script.google.com/macros/s/AKfycbzS8RtuT6RP6DaCYK90Bj6hkmQeStrA5JPQNmDXi12NwYKMM6ktIDQjF9xWh3AU1mSLLw/exec";
+            <div class="form-group">
 
-const configURL =
-"https://script.google.com/macros/s/AKfycby0EW_ORUu2uVtzyFUkvMx-uXty1KCe9QIYCptiKNWEB-BAKoEih8AeJnsqcZCHtpBPFQ/exec";
+                <label>User</label>
 
+                <select id="person" name="person">
 
-// ===================================
-// Load Dropdowns
-// ===================================
+                    <option>Loading...</option>
 
-async function loadDropdowns() {
+                </select>
 
-  try {
+            </div>
 
-    const response =
-      await fetch(configURL);
+            <!-- Category -->
 
-    const data =
-      await response.json();
+            <div class="form-group">
 
-    populateDropdown(
-      "person",
-      data.users
-    );
+                <label>Category</label>
 
-    populateDropdown(
-      "category",
-      data.categories
-    );
+                <select id="category" name="category">
 
-    populateDropdown(
-      "paymentMode",
-      data.paymentModes
-    );
+                    <option>Loading...</option>
 
-  }
-  catch(error) {
+                </select>
 
-    console.error(error);
+            </div>
 
-    document.getElementById("status")
-      .innerText =
-      "Unable to load dropdown data";
+            <!-- Payment -->
 
-  }
+            <div class="form-group">
 
-}
+                <label>Payment Mode</label>
 
+                <select id="paymentMode" name="paymentMode">
 
-// ===================================
-// Populate Dropdown Helper
-// ===================================
+                    <option>Loading...</option>
 
-function populateDropdown(id, values) {
+                </select>
 
-  const dropdown =
-    document.getElementById(id);
+            </div>
 
-  dropdown.innerHTML =
-    '<option value="">Select</option>';
+            <!-- Amount -->
 
-  values.forEach(value => {
+            <div class="form-group">
 
-    const option =
-      document.createElement("option");
+                <label>Amount</label>
 
-    option.value = value;
-    option.textContent = value;
+                <input
+                    type="number"
+                    id="amount"
+                    name="amount"
+                    placeholder="Enter Amount"
+                    step="0.01"
+                    required
+                >
 
-    dropdown.appendChild(option);
+            </div>
 
-  });
+            <!-- Notes -->
 
-}
+            <div class="form-group">
 
+                <label>Notes</label>
 
-// ===================================
-// Date Handling
-// ===================================
+                <input
+                    type="text"
+                    id="notes"
+                    name="notes"
+                    placeholder="Optional"
+                >
 
-const dateOption =
-  document.getElementById("dateOption");
+            </div>
 
-const customDate =
-  document.getElementById("customDate");
+            <button type="submit">
 
-dateOption.addEventListener(
-  "change",
-  function() {
+                Save Expense
 
-    if(this.value === "custom") {
+            </button>
 
-      customDate.style.display =
-        "block";
+        </form>
 
-      customDate.required = true;
+        <p id="status"></p>
 
-    }
-    else {
+    </div>
 
-      customDate.style.display =
-        "none";
+</section>
 
-      customDate.required = false;
 
-    }
+<!-- ============================
+        DASHBOARD
+============================= -->
 
-  }
-);
+<section class="dashboard-section">
 
+    <h2>📊 Expense Dashboard</h2>
 
-// ===================================
-// Form Submit
-// ===================================
+    <!-- Filters -->
 
-document
-.getElementById("expenseForm")
-.addEventListener(
-"submit",
-async (e) => {
+    <div class="filter-card">
 
-  e.preventDefault();
+        <div class="filter">
 
-  const formData =
-    Object.fromEntries(
-      new FormData(e.target)
-    );
+            <label>From</label>
 
-  let expenseDate;
+            <input
+                type="date"
+                id="fromDate"
+            >
 
-  switch(formData.dateOption) {
+        </div>
 
-    case "today":
+        <div class="filter">
 
-      expenseDate =
-        new Date()
-        .toISOString()
-        .split("T")[0];
+            <label>To</label>
 
-      break;
+            <input
+                type="date"
+                id="toDate"
+            >
 
-    case "yesterday":
+        </div>
 
-      const yesterday =
-        new Date();
+        <div class="filter">
 
-      yesterday.setDate(
-        yesterday.getDate() - 1
-      );
+            <label>User</label>
 
-      expenseDate =
-        yesterday
-        .toISOString()
-        .split("T")[0];
+            <select id="dashboardUser">
 
-      break;
+                <option value="All">
 
-    case "custom":
+                    All Users
 
-      expenseDate =
-        formData.expenseDate;
+                </option>
 
-      break;
+            </select>
 
-  }
+        </div>
 
-  formData.expenseDate =
-    expenseDate;
+        <div class="filter">
 
-  document
-    .getElementById("status")
-    .innerText =
-    "Saving Expense...";
-  console.log("Submitting:", formData);
-  console.log("URL:", submitURL);
-  try {
+            <label>Category</label>
 
-    await fetch(
-      submitURL,
-      {
-        method: "POST",
-        mode: "no-cors",
-        headers: {
-          "Content-Type":
-          "application/json"
-        },
-        body:
-          JSON.stringify(
-            formData
-          )
-      }
-    );
+            <select id="dashboardCategory">
 
-    const status =
-      document.getElementById(
-        "status"
-      );
+                <option value="All">
 
-    status.className =
-      "success";
+                    All Categories
 
-    status.innerText =
-      "✅ Expense Saved Successfully";
+                </option>
 
-    e.target.reset();
+            </select>
 
-    document
-      .getElementById(
-        "dateOption"
-      )
-      .value =
-      "today";
+        </div>
 
-    customDate.style.display =
-      "none";
+        <button id="refreshDashboard">
 
-  }
-  catch(err) {
+            Refresh Dashboard
 
-    console.error(err);
+        </button>
 
-    const status =
-      document.getElementById(
-        "status"
-      );
+    </div>
 
-    status.className =
-      "error";
 
-    status.innerText =
-      "❌ Error Saving Expense";
+    <!-- KPI -->
 
-  }
+    <div class="kpi-grid">
 
-});
+        <div class="kpi-card">
 
+            <h3>Total Expense</h3>
 
-// ===================================
-// Initial Load
-// ===================================
+            <h1 id="totalExpense">
 
-loadDropdowns();
+                ₹0
 
-</script>
+            </h1>
+
+        </div>
+
+        <div class="kpi-card">
+
+            <h3>Total Transactions</h3>
+
+            <h1 id="transactionCount">
+
+                0
+
+            </h1>
+
+        </div>
+
+        <div class="kpi-card">
+
+            <h3>Average Expense</h3>
+
+            <h1 id="averageExpense">
+
+                ₹0
+
+            </h1>
+
+        </div>
+
+        <div class="kpi-card">
+
+            <h3>Highest Category</h3>
+
+            <h1 id="highestCategory">
+
+                -
+
+            </h1>
+
+        </div>
+
+    </div>
+
+
+    <!-- Charts -->
+
+    <div class="chart-grid">
+
+        <div class="chart-card">
+
+            <h3>Category-wise Spending</h3>
+
+            <canvas id="categoryChart"></canvas>
+
+        </div>
+
+        <div class="chart-card">
+
+            <h3>Daily Expense Trend</h3>
+
+            <canvas id="trendChart"></canvas>
+
+        </div>
+
+        <div class="chart-card">
+
+            <h3>Payment Mode Split</h3>
+
+            <canvas id="paymentChart"></canvas>
+
+        </div>
+
+        <div class="chart-card">
+
+            <h3>User-wise Spending</h3>
+
+            <canvas id="userChart"></canvas>
+
+        </div>
+
+    </div>
+
+
+    <!-- Recent Expenses -->
+
+    <div class="table-card">
+
+        <h3>
+
+            Recent Transactions
+
+        </h3>
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>Date</th>
+
+                    <th>User</th>
+
+                    <th>Category</th>
+
+                    <th>Payment</th>
+
+                    <th>Amount</th>
+
+                    <th>Notes</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody id="expenseTable">
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</section>
+
+
+<footer>
+
+    Built using Google Sheets + Apps Script + GitHub Pages
+
+</footer>
+
+
+<script src="charts.js"></script>
+
+<script src="app.js"></script>
 
 </body>
+
 </html>
