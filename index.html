@@ -4,367 +4,765 @@
 <head>
 
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
     <title>Expense Tracker</title>
 
-    <link rel="stylesheet" href="style.css">
+    <!-- CSS -->
+    <link rel="stylesheet"
+          href="style.css">
 
+    <!-- Google Font -->
+    <link rel="preconnect"
+          href="https://fonts.googleapis.com">
+
+    <link rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+          rel="stylesheet">
+
+    <!-- ChartJS -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 </head>
 
 <body>
 
-<header>
+<div class="app-container">
 
-    <h1>💰 Expense Tracker</h1>
+    <!-- ========================================= -->
+    <!-- HEADER -->
+    <!-- ========================================= -->
 
-</header>
+    <header class="top-header">
 
+        <div>
 
-<!-- ============================
-        EXPENSE FORM
-============================= -->
+            <h1>💰 Personal Expense Tracker</h1>
 
-<section class="form-section">
-
-    <div class="card">
-
-        <h2>Add Expense</h2>
-
-        <form id="expenseForm">
-
-            <!-- Date -->
-
-            <div class="form-group">
-
-                <label>Expense Date</label>
-
-                <select id="dateOption" name="dateOption">
-
-                    <option value="today" selected>Today</option>
-                    <option value="yesterday">Yesterday</option>
-                    <option value="custom">Custom Date</option>
-
-                </select>
-
-                <input
-                    type="date"
-                    id="customDate"
-                    name="expenseDate"
-                    style="display:none;"
-                >
-
-            </div>
-
-            <!-- User -->
-
-            <div class="form-group">
-
-                <label>User</label>
-
-                <select id="person" name="person">
-
-                    <option>Loading...</option>
-
-                </select>
-
-            </div>
-
-            <!-- Category -->
-
-            <div class="form-group">
-
-                <label>Category</label>
-
-                <select id="category" name="category">
-
-                    <option>Loading...</option>
-
-                </select>
-
-            </div>
-
-            <!-- Payment -->
-
-            <div class="form-group">
-
-                <label>Payment Mode</label>
-
-                <select id="paymentMode" name="paymentMode">
-
-                    <option>Loading...</option>
-
-                </select>
-
-            </div>
-
-            <!-- Amount -->
-
-            <div class="form-group">
-
-                <label>Amount</label>
-
-                <input
-                    type="number"
-                    id="amount"
-                    name="amount"
-                    placeholder="Enter Amount"
-                    step="0.01"
-                    required
-                >
-
-            </div>
-
-            <!-- Notes -->
-
-            <div class="form-group">
-
-                <label>Notes</label>
-
-                <input
-                    type="text"
-                    id="notes"
-                    name="notes"
-                    placeholder="Optional"
-                >
-
-            </div>
-
-            <button type="submit">
-
-                Save Expense
-
-            </button>
-
-        </form>
-
-        <p id="status"></p>
-
-    </div>
-
-</section>
-
-
-<!-- ============================
-        DASHBOARD
-============================= -->
-
-<section class="dashboard-section">
-
-    <h2>📊 Expense Dashboard</h2>
-
-    <!-- Filters -->
-
-    <div class="filter-card">
-
-        <div class="filter">
-
-            <label>From</label>
-
-            <input
-                type="date"
-                id="fromDate"
-            >
+            <p>
+                Track every expense and understand your spending
+            </p>
 
         </div>
 
-        <div class="filter">
+    </header>
 
-            <label>To</label>
 
-            <input
-                type="date"
-                id="toDate"
-            >
+    <!-- ========================================= -->
+    <!-- TABS -->
+    <!-- ========================================= -->
 
-        </div>
+    <div class="page-tabs">
 
-        <div class="filter">
+        <button
+            class="tab-button active"
+            id="formTab">
 
-            <label>User</label>
+            Save Expense
 
-            <select id="dashboardUser">
+        </button>
 
-                <option value="All">
+        <button
+            class="tab-button"
+            id="dashboardTab">
 
-                    All Users
-
-                </option>
-
-            </select>
-
-        </div>
-
-        <div class="filter">
-
-            <label>Category</label>
-
-            <select id="dashboardCategory">
-
-                <option value="All">
-
-                    All Categories
-
-                </option>
-
-            </select>
-
-        </div>
-
-        <button id="refreshDashboard">
-
-            Refresh Dashboard
+            Dashboard
 
         </button>
 
     </div>
 
 
-    <!-- KPI -->
+    <!-- ========================================= -->
+    <!-- PAGE CONTENT -->
+    <!-- ========================================= -->
 
-    <div class="kpi-grid">
+    <div class="page-wrapper">
 
-        <div class="kpi-card">
 
-            <h3>Total Expense</h3>
+        <!-- ========================================= -->
+        <!-- EXPENSE FORM PAGE -->
+        <!-- ========================================= -->
 
-            <h1 id="totalExpense">
+        <section
+            id="expensePage"
+            class="page active">
 
-                ₹0
+            <div class="card">
 
-            </h1>
+                <h2>
 
-        </div>
+                    Add Expense
 
-        <div class="kpi-card">
+                </h2>
 
-            <h3>Total Transactions</h3>
+                <form id="expenseForm">
 
-            <h1 id="transactionCount">
+                    <!-- Date -->
 
-                0
+                    <div class="form-group">
 
-            </h1>
+                        <label>
 
-        </div>
+                            Expense Date
 
-        <div class="kpi-card">
+                        </label>
 
-            <h3>Average Expense</h3>
+                        <select
+                            id="dateOption"
+                            name="dateOption">
 
-            <h1 id="averageExpense">
+                            <option value="today" selected>
+                                Today
+                            </option>
 
-                ₹0
+                            <option value="yesterday">
+                                Yesterday
+                            </option>
 
-            </h1>
+                            <option value="custom">
+                                Custom Date
+                            </option>
 
-        </div>
+                        </select>
 
-        <div class="kpi-card">
+                        <input
+                            type="date"
+                            id="customDate"
+                            name="expenseDate"
+                            class="hidden">
 
-            <h3>Highest Category</h3>
+                    </div>
+                                        <!-- User -->
 
-            <h1 id="highestCategory">
+                    <div class="form-group">
 
-                -
+                        <label for="person">
 
-            </h1>
+                            User
+
+                        </label>
+
+                        <select
+                            id="person"
+                            name="person"
+                            required>
+
+                            <option value="">
+                                Loading Users...
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- Category -->
+
+                    <div class="form-group">
+
+                        <label for="category">
+
+                            Expense Category
+
+                        </label>
+
+                        <select
+                            id="category"
+                            name="category"
+                            required>
+
+                            <option value="">
+                                Loading Categories...
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- Payment Mode -->
+
+                    <div class="form-group">
+
+                        <label for="paymentMode">
+
+                            Payment Mode
+
+                        </label>
+
+                        <select
+                            id="paymentMode"
+                            name="paymentMode"
+                            required>
+
+                            <option value="">
+                                Loading Payment Modes...
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- Amount -->
+
+                    <div class="form-group">
+
+                        <label for="amount">
+
+                            Amount (₹)
+
+                        </label>
+
+                        <input
+                            type="number"
+                            id="amount"
+                            name="amount"
+                            step="0.01"
+                            min="0"
+                            placeholder="Enter Amount"
+                            required>
+
+                    </div>
+
+
+                    <!-- Notes -->
+
+                    <div class="form-group">
+
+                        <label for="notes">
+
+                            Notes
+
+                        </label>
+
+                        <textarea
+                            id="notes"
+                            name="notes"
+                            rows="3"
+                            placeholder="Optional remarks"></textarea>
+
+                    </div>
+
+
+                    <!-- Buttons -->
+
+                    <div class="button-row">
+
+                        <button
+                            type="submit"
+                            id="saveExpense">
+
+                            💾 Save Expense
+
+                        </button>
+
+                        <button
+                            type="reset"
+                            id="resetForm"
+                            class="secondary-button">
+
+                            Reset
+
+                        </button>
+
+                    </div>
+
+
+                    <!-- Status -->
+
+                    <div
+                        id="status"
+                        class="status-message">
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ===================================== -->
+        <!-- DASHBOARD PAGE -->
+        <!-- ===================================== -->
+
+        <section
+            id="dashboardPage"
+            class="page">
+
+            <div class="card">
+
+                <div class="section-header">
+
+                    <h2>
+
+                        Expense Dashboard
+
+                    </h2>
+
+                    <button
+                        id="refreshDashboard"
+                        class="refresh-button">
+
+                        🔄 Refresh
+
+                    </button>
+
+                </div>
+                                <!-- ========================================= -->
+                <!-- DASHBOARD FILTERS -->
+                <!-- ========================================= -->
+
+                <div class="filter-grid">
+
+                    <!-- From Date -->
+
+                    <div class="form-group">
+
+                        <label for="fromDate">
+
+                            From Date
+
+                        </label>
+
+                        <input
+                            type="date"
+                            id="fromDate">
+
+                    </div>
+
+
+                    <!-- To Date -->
+
+                    <div class="form-group">
+
+                        <label for="toDate">
+
+                            To Date
+
+                        </label>
+
+                        <input
+                            type="date"
+                            id="toDate">
+
+                    </div>
+
+
+                    <!-- User Filter -->
+
+                    <div class="form-group">
+
+                        <label for="dashboardUser">
+
+                            User
+
+                        </label>
+
+                        <select
+                            id="dashboardUser">
+
+                            <option value="">
+                                All Users
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- Category Filter -->
+
+                    <div class="form-group">
+
+                        <label for="dashboardCategory">
+
+                            Category
+
+                        </label>
+
+                        <select
+                            id="dashboardCategory">
+
+                            <option value="">
+                                All Categories
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- ========================================= -->
+                <!-- FILTER BUTTONS -->
+                <!-- ========================================= -->
+
+                <div class="button-row">
+
+                    <button
+                        id="applyFilters"
+                        type="button">
+
+                        Apply Filters
+
+                    </button>
+
+                    <button
+                        id="clearFilters"
+                        type="button"
+                        class="secondary-button">
+
+                        Clear Filters
+
+                    </button>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- ========================================= -->
+            <!-- SUMMARY KPI CARDS -->
+            <!-- ========================================= -->
+
+            <div class="summary-grid">
+
+                <div class="summary-card">
+
+                    <div class="summary-title">
+
+                        Total Expense
+
+                    </div>
+
+                    <div
+                        id="totalExpense"
+                        class="summary-value">
+
+                        ₹0
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="summary-card">
+
+                    <div class="summary-title">
+
+                        Transactions
+
+                    </div>
+
+                    <div
+                        id="transactionCount"
+                        class="summary-value">
+
+                        0
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="summary-card">
+
+                    <div class="summary-title">
+
+                        Average Expense
+
+                    </div>
+
+                    <div
+                        id="averageExpense"
+                        class="summary-value">
+
+                        ₹0
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="summary-card">
+
+                    <div class="summary-title">
+
+                        Highest Category
+
+                    </div>
+
+                    <div
+                        id="highestCategory"
+                        class="summary-value">
+
+                        -
+
+                    </div>
+
+                </div>
+
+            </div>
+                        <!-- ========================================= -->
+            <!-- CHARTS SECTION -->
+            <!-- ========================================= -->
+
+            <div class="charts-grid">
+
+                <!-- Category Spending -->
+
+                <div class="chart-card">
+
+                    <div class="chart-header">
+
+                        <h3>
+
+                            Category-wise Spending
+
+                        </h3>
+
+                    </div>
+
+                    <div class="chart-container">
+
+                        <canvas
+                            id="categoryChart">
+
+                        </canvas>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- Daily Trend -->
+
+                <div class="chart-card">
+
+                    <div class="chart-header">
+
+                        <h3>
+
+                            Daily Expense Trend
+
+                        </h3>
+
+                    </div>
+
+                    <div class="chart-container">
+
+                        <canvas
+                            id="trendChart">
+
+                        </canvas>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- Payment Mode -->
+
+                <div class="chart-card">
+
+                    <div class="chart-header">
+
+                        <h3>
+
+                            Payment Mode Distribution
+
+                        </h3>
+
+                    </div>
+
+                    <div class="chart-container">
+
+                        <canvas
+                            id="paymentChart">
+
+                        </canvas>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- User Comparison -->
+
+                <div class="chart-card">
+
+                    <div class="chart-header">
+
+                        <h3>
+
+                            User-wise Spending
+
+                        </h3>
+
+                    </div>
+
+                    <div class="chart-container">
+
+                        <canvas
+                            id="userChart">
+
+                        </canvas>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- ========================================= -->
+            <!-- RECENT EXPENSES -->
+            <!-- ========================================= -->
+
+            <div class="card">
+
+                <div class="section-header">
+
+                    <h2>
+
+                        Recent Expenses
+
+                    </h2>
+
+                </div>
+                                <div class="table-responsive">
+
+                    <table
+                        id="expenseTable"
+                        class="expense-table">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>Date</th>
+
+                                <th>User</th>
+
+                                <th>Category</th>
+
+                                <th>Payment Mode</th>
+
+                                <th>Amount</th>
+
+                                <th>Notes</th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody id="expenseTableBody">
+
+                            <tr>
+
+                                <td
+                                    colspan="6"
+                                    class="empty-table">
+
+                                    No expenses found
+
+                                </td>
+
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </div>
+
+
+    <!-- ========================================= -->
+    <!-- LOADING OVERLAY -->
+    <!-- ========================================= -->
+
+    <div
+        id="loadingOverlay"
+        class="loading-overlay hidden">
+
+        <div class="loading-card">
+
+            <div class="spinner"></div>
+
+            <p>
+
+                Loading...
+
+            </p>
 
         </div>
 
     </div>
 
 
-    <!-- Charts -->
+    <!-- ========================================= -->
+    <!-- TOAST NOTIFICATION -->
+    <!-- ========================================= -->
 
-    <div class="chart-grid">
-
-        <div class="chart-card">
-
-            <h3>Category-wise Spending</h3>
-
-            <canvas id="categoryChart"></canvas>
-
-        </div>
-
-        <div class="chart-card">
-
-            <h3>Daily Expense Trend</h3>
-
-            <canvas id="trendChart"></canvas>
-
-        </div>
-
-        <div class="chart-card">
-
-            <h3>Payment Mode Split</h3>
-
-            <canvas id="paymentChart"></canvas>
-
-        </div>
-
-        <div class="chart-card">
-
-            <h3>User-wise Spending</h3>
-
-            <canvas id="userChart"></canvas>
-
-        </div>
+    <div
+        id="toast"
+        class="toast">
 
     </div>
 
 
-    <!-- Recent Expenses -->
+    <!-- ========================================= -->
+    <!-- FOOTER -->
+    <!-- ========================================= -->
 
-    <div class="table-card">
+    <footer class="footer">
 
-        <h3>
+        <p>
 
-            Recent Transactions
+            © 2026 Personal Expense Tracker
 
-        </h3>
+        </p>
 
-        <table>
+        <p>
 
-            <thead>
+            Built using Google Apps Script • GitHub Pages • Chart.js
 
-                <tr>
+        </p>
 
-                    <th>Date</th>
+    </footer>
 
-                    <th>User</th>
-
-                    <th>Category</th>
-
-                    <th>Payment</th>
-
-                    <th>Amount</th>
-
-                    <th>Notes</th>
-
-                </tr>
-
-            </thead>
-
-            <tbody id="expenseTable">
-
-            </tbody>
-
-        </table>
-
-    </div>
-
-</section>
+</div>
 
 
-<footer>
-
-    Built using Google Sheets + Apps Script + GitHub Pages
-
-</footer>
-
+<!-- ========================================= -->
+<!-- JAVASCRIPT FILES -->
+<!-- ========================================= -->
 
 <script src="charts.js"></script>
 
