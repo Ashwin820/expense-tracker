@@ -744,7 +744,7 @@ function updateSummaryCards(summary){
 function populateRecentExpenses(rows){
 
     const tbody =
-        $("expenseTable");
+        $("expenseTable").querySelector("tbody");
 
     tbody.innerHTML = "";
 
