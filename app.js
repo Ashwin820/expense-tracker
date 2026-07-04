@@ -12,13 +12,13 @@
 const CONFIG = {
 
     submitURL:
-        "YOUR_SUBMIT_APPS_SCRIPT_URL",
+        "https://script.google.com/macros/s/AKfycbzXeIYH5QxJ5zrfXgVCJqdmT8RRYFY63GpCRIEVRsoKDdWMSWWVzNtNlo8REN4nNydD4g/exec",
 
     configURL:
-        "YOUR_CONFIG_APPS_SCRIPT_URL",
+        "https://script.google.com/macros/s/AKfycbzXeIYH5QxJ5zrfXgVCJqdmT8RRYFY63GpCRIEVRsoKDdWMSWWVzNtNlo8REN4nNydD4g/exec?action=config",
 
     dashboardURL:
-        "YOUR_DASHBOARD_APPS_SCRIPT_URL"
+        "https://script.google.com/macros/s/AKfycbzXeIYH5QxJ5zrfXgVCJqdmT8RRYFY63GpCRIEVRsoKDdWMSWWVzNtNlo8REN4nNydD4g/exec?action=dashboard"
 
 };
 
