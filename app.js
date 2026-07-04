@@ -12,13 +12,13 @@
 const CONFIG = {
 
     submitURL:
-        "https://script.google.com/macros/s/AKfycbzXeIYH5QxJ5zrfXgVCJqdmT8RRYFY63GpCRIEVRsoKDdWMSWWVzNtNlo8REN4nNydD4g/exec",
+        "https://script.google.com/macros/s/AKfycbxP9z4r3bIVGydt646OQCOq45oycl2yeuzQZ05Dp-LJQTUKWwwN6ghhi2mK3lMOH2tu0g/exec",
 
     configURL:
-        "https://script.google.com/macros/s/AKfycbzXeIYH5QxJ5zrfXgVCJqdmT8RRYFY63GpCRIEVRsoKDdWMSWWVzNtNlo8REN4nNydD4g/exec?action=config",
+        "https://script.google.com/macros/s/AKfycbxP9z4r3bIVGydt646OQCOq45oycl2yeuzQZ05Dp-LJQTUKWwwN6ghhi2mK3lMOH2tu0g/exec?action=config",
 
     dashboardURL:
-        "https://script.google.com/macros/s/AKfycbzXeIYH5QxJ5zrfXgVCJqdmT8RRYFY63GpCRIEVRsoKDdWMSWWVzNtNlo8REN4nNydD4g/exec?action=dashboard"
+        "https://script.google.com/macros/s/AKfycbxP9z4r3bIVGydt646OQCOq45oycl2yeuzQZ05Dp-LJQTUKWwwN6ghhi2mK3lMOH2tu0g/exec?action=dashboard"
 
 };
 
