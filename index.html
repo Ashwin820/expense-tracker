@@ -1,773 +1,425 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Expense Tracker</title>
 
-    <meta charset="UTF-8">
+<style>
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+* {
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
 
-    <title>Expense Tracker</title>
+body {
+  margin: 0;
+  padding: 20px;
+  background: linear-gradient(135deg, #4f46e5, #06b6d4);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
-    <!-- CSS -->
-    <link rel="stylesheet"
-          href="style.css">
+.container {
+  background: white;
+  width: 100%;
+  max-width: 500px;
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
 
-    <!-- Google Font -->
-    <link rel="preconnect"
-          href="https://fonts.googleapis.com">
+h2 {
+  text-align: center;
+  margin-bottom: 25px;
+  color: #1e293b;
+}
 
-    <link rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossorigin>
+label {
+  display: block;
+  margin-top: 15px;
+  margin-bottom: 6px;
+  font-weight: bold;
+  color: #334155;
+}
 
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
-          rel="stylesheet">
+input,
+select,
+button {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #cbd5e1;
+  font-size: 15px;
+}
 
-    <!-- ChartJS -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+input:focus,
+select:focus {
+  outline: none;
+  border-color: #4f46e5;
+  box-shadow: 0 0 5px rgba(79,70,229,0.4);
+}
 
+button {
+  margin-top: 25px;
+  border: none;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  background: linear-gradient(135deg, #4f46e5, #06b6d4);
+  transition: 0.3s;
+}
+
+button:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+#status {
+  margin-top: 15px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.footer {
+  margin-top: 20px;
+  text-align: center;
+  color: #64748b;
+  font-size: 12px;
+}
+
+.success {
+  color: #16a34a;
+}
+
+.error {
+  color: #dc2626;
+}
+
+</style>
 </head>
 
 <body>
 
-<div class="app-container">
-
-    <!-- ========================================= -->
-    <!-- HEADER -->
-    <!-- ========================================= -->
-
-    <header class="top-header">
-
-        <div>
-
-            <h1>💰 Personal Expense Tracker</h1>
-
-            <p>
-                Track every expense and understand your spending
-            </p>
-
-        </div>
-
-    </header>
-
-
-    <!-- ========================================= -->
-    <!-- TABS -->
-    <!-- ========================================= -->
-
-    <div class="page-tabs">
-
-        <button
-            class="tab-button active"
-            id="formTab">
-
-            Save Expense
-
-        </button>
-
-        <button
-            class="tab-button"
-            id="dashboardTab">
-
-            Dashboard
-
-        </button>
-
-    </div>
-
-
-    <!-- ========================================= -->
-    <!-- PAGE CONTENT -->
-    <!-- ========================================= -->
-
-    <div class="page-wrapper">
-
-
-        <!-- ========================================= -->
-        <!-- EXPENSE FORM PAGE -->
-        <!-- ========================================= -->
-
-        <section
-            id="expensePage"
-            class="page active">
-
-            <div class="card">
-
-                <h2>
-
-                    Add Expense
-
-                </h2>
-
-                <form id="expenseForm">
-
-                    <!-- Date -->
-
-                    <div class="form-group">
-
-                        <label>
-
-                            Expense Date
-
-                        </label>
-
-                        <select
-                            id="dateOption"
-                            name="dateOption">
-
-                            <option value="today" selected>
-                                Today
-                            </option>
-
-                            <option value="yesterday">
-                                Yesterday
-                            </option>
-
-                            <option value="custom">
-                                Custom Date
-                            </option>
-
-                        </select>
-
-                        <input
-                            type="date"
-                            id="customDate"
-                            name="expenseDate"
-                            class="hidden">
-
-                    </div>
-                                        <!-- User -->
-
-                    <div class="form-group">
-
-                        <label for="person">
-
-                            User
-
-                        </label>
-
-                        <select
-                            id="person"
-                            name="person"
-                            required>
-
-                            <option value="">
-                                Loading Users...
-                            </option>
-
-                        </select>
-
-                    </div>
-
-
-                    <!-- Category -->
-
-                    <div class="form-group">
-
-                        <label for="category">
-
-                            Expense Category
-
-                        </label>
-
-                        <select
-                            id="category"
-                            name="category"
-                            required>
-
-                            <option value="">
-                                Loading Categories...
-                            </option>
-
-                        </select>
-
-                    </div>
-
-
-                    <!-- Payment Mode -->
-
-                    <div class="form-group">
-
-                        <label for="paymentMode">
-
-                            Payment Mode
-
-                        </label>
-
-                        <select
-                            id="paymentMode"
-                            name="paymentMode"
-                            required>
-
-                            <option value="">
-                                Loading Payment Modes...
-                            </option>
-
-                        </select>
-
-                    </div>
-
-
-                    <!-- Amount -->
-
-                    <div class="form-group">
-
-                        <label for="amount">
-
-                            Amount (₹)
-
-                        </label>
-
-                        <input
-                            type="number"
-                            id="amount"
-                            name="amount"
-                            step="0.01"
-                            min="0"
-                            placeholder="Enter Amount"
-                            required>
-
-                    </div>
-
-
-                    <!-- Notes -->
-
-                    <div class="form-group">
-
-                        <label for="notes">
-
-                            Notes
-
-                        </label>
-
-                        <textarea
-                            id="notes"
-                            name="notes"
-                            rows="3"
-                            placeholder="Optional remarks"></textarea>
-
-                    </div>
-
-
-                    <!-- Buttons -->
-
-                    <div class="button-row">
-
-                        <button
-                            type="submit"
-                            id="saveExpense">
-
-                            💾 Save Expense
-
-                        </button>
-
-                        <button
-                            type="reset"
-                            id="resetForm"
-                            class="secondary-button">
-
-                            Reset
-
-                        </button>
-
-                    </div>
-
-
-                    <!-- Status -->
-
-                    <div
-                        id="status"
-                        class="status-message">
-
-                    </div>
-
-                </form>
-
-            </div>
-
-        </section>
-
-
-
-        <!-- ===================================== -->
-        <!-- DASHBOARD PAGE -->
-        <!-- ===================================== -->
-
-        <section
-            id="dashboardPage"
-            class="page">
-
-            <div class="card">
-
-                <div class="section-header">
-
-                    <h2>
-
-                        Expense Dashboard
-
-                    </h2>
-
-                    <button
-                        id="refreshDashboard"
-                        class="refresh-button">
-
-                        🔄 Refresh
-
-                    </button>
-
-                </div>
-                                <!-- ========================================= -->
-                <!-- DASHBOARD FILTERS -->
-                <!-- ========================================= -->
-
-                <div class="filter-grid">
-
-                    <!-- From Date -->
-
-                    <div class="form-group">
-
-                        <label for="fromDate">
-
-                            From Date
-
-                        </label>
-
-                        <input
-                            type="date"
-                            id="fromDate">
-
-                    </div>
-
-
-                    <!-- To Date -->
-
-                    <div class="form-group">
-
-                        <label for="toDate">
-
-                            To Date
-
-                        </label>
-
-                        <input
-                            type="date"
-                            id="toDate">
-
-                    </div>
-
-
-                    <!-- User Filter -->
-
-                    <div class="form-group">
-
-                        <label for="dashboardUser">
-
-                            User
-
-                        </label>
-
-                        <select
-                            id="dashboardUser">
-
-                            <option value="">
-                                All Users
-                            </option>
-
-                        </select>
-
-                    </div>
-
-
-                    <!-- Category Filter -->
-
-                    <div class="form-group">
-
-                        <label for="dashboardCategory">
-
-                            Category
-
-                        </label>
-
-                        <select
-                            id="dashboardCategory">
-
-                            <option value="">
-                                All Categories
-                            </option>
-
-                        </select>
-
-                    </div>
-
-                </div>
-
-
-
-                <!-- ========================================= -->
-                <!-- FILTER BUTTONS -->
-                <!-- ========================================= -->
-
-                <div class="button-row">
-
-                    <button
-                        id="applyFilters"
-                        type="button">
-
-                        Apply Filters
-
-                    </button>
-
-                    <button
-                        id="clearFilters"
-                        type="button"
-                        class="secondary-button">
-
-                        Clear Filters
-
-                    </button>
-
-                </div>
-
-            </div>
-
-
-
-            <!-- ========================================= -->
-            <!-- SUMMARY KPI CARDS -->
-            <!-- ========================================= -->
-
-            <div class="summary-grid">
-
-                <div class="summary-card">
-
-                    <div class="summary-title">
-
-                        Total Expense
-
-                    </div>
-
-                    <div
-                        id="totalExpense"
-                        class="summary-value">
-
-                        ₹0
-
-                    </div>
-
-                </div>
-
-
-
-                <div class="summary-card">
-
-                    <div class="summary-title">
-
-                        Transactions
-
-                    </div>
-
-                    <div
-                        id="transactionCount"
-                        class="summary-value">
-
-                        0
-
-                    </div>
-
-                </div>
-
-
-
-                <div class="summary-card">
-
-                    <div class="summary-title">
-
-                        Average Expense
-
-                    </div>
-
-                    <div
-                        id="averageExpense"
-                        class="summary-value">
-
-                        ₹0
-
-                    </div>
-
-                </div>
-
-
-
-                <div class="summary-card">
-
-                    <div class="summary-title">
-
-                        Highest Category
-
-                    </div>
-
-                    <div
-                        id="highestCategory"
-                        class="summary-value">
-
-                        -
-
-                    </div>
-
-                </div>
-
-            </div>
-                        <!-- ========================================= -->
-            <!-- CHARTS SECTION -->
-            <!-- ========================================= -->
-
-            <div class="charts-grid">
-
-                <!-- Category Spending -->
-
-                <div class="chart-card">
-
-                    <div class="chart-header">
-
-                        <h3>
-
-                            Category-wise Spending
-
-                        </h3>
-
-                    </div>
-
-                    <div class="chart-container">
-
-                        <canvas
-                            id="categoryChart">
-
-                        </canvas>
-
-                    </div>
-
-                </div>
-
-
-
-                <!-- Daily Trend -->
-
-                <div class="chart-card">
-
-                    <div class="chart-header">
-
-                        <h3>
-
-                            Daily Expense Trend
-
-                        </h3>
-
-                    </div>
-
-                    <div class="chart-container">
-
-                        <canvas
-                            id="trendChart">
-
-                        </canvas>
-
-                    </div>
-
-                </div>
-
-
-
-                <!-- Payment Mode -->
-
-                <div class="chart-card">
-
-                    <div class="chart-header">
-
-                        <h3>
-
-                            Payment Mode Distribution
-
-                        </h3>
-
-                    </div>
-
-                    <div class="chart-container">
-
-                        <canvas
-                            id="paymentChart">
-
-                        </canvas>
-
-                    </div>
-
-                </div>
-
-
-
-                <!-- User Comparison -->
-
-                <div class="chart-card">
-
-                    <div class="chart-header">
-
-                        <h3>
-
-                            User-wise Spending
-
-                        </h3>
-
-                    </div>
-
-                    <div class="chart-container">
-
-                        <canvas
-                            id="userChart">
-
-                        </canvas>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-
-            <!-- ========================================= -->
-            <!-- RECENT EXPENSES -->
-            <!-- ========================================= -->
-
-            <div class="card">
-
-                <div class="section-header">
-
-                    <h2>
-
-                        Recent Expenses
-
-                    </h2>
-
-                </div>
-                                <div class="table-responsive">
-
-                    <table
-                        id="expenseTable"
-                        class="expense-table">
-
-                        <thead>
-
-                            <tr>
-
-                                <th>Date</th>
-
-                                <th>User</th>
-
-                                <th>Category</th>
-
-                                <th>Payment Mode</th>
-
-                                <th>Amount</th>
-
-                                <th>Notes</th>
-
-                            </tr>
-
-                        </thead>
-
-                        <tbody id="expenseTableBody">
-
-                            <tr>
-
-                                <td
-                                    colspan="6"
-                                    class="empty-table">
-
-                                    No expenses found
-
-                                </td>
-
-                            </tr>
-
-                        </tbody>
-
-                    </table>
-
-                </div>
-
-            </div>
-
-        </section>
-
-    </div>
-
-
-    <!-- ========================================= -->
-    <!-- LOADING OVERLAY -->
-    <!-- ========================================= -->
-
-    <div
-        id="loadingOverlay"
-        class="loading-overlay hidden">
-
-        <div class="loading-card">
-
-            <div class="spinner"></div>
-
-            <p>
-
-                Loading...
-
-            </p>
-
-        </div>
-
-    </div>
-
-
-    <!-- ========================================= -->
-    <!-- TOAST NOTIFICATION -->
-    <!-- ========================================= -->
-
-    <div
-        id="toast"
-        class="toast">
-
-    </div>
-
-
-    <!-- ========================================= -->
-    <!-- FOOTER -->
-    <!-- ========================================= -->
-
-    <footer class="footer">
-
-        <p>
-
-            © 2026 Personal Expense Tracker
-
-        </p>
-
-        <p>
-
-            Built using Google Apps Script • GitHub Pages • Chart.js
-
-        </p>
-
-    </footer>
+<div class="container">
+
+  <h2>💰 Expense Tracker</h2>
+
+  <form id="expenseForm">
+
+    <label>User</label>
+    <select name="person" id="person" required>
+      <option value="">Loading Users...</option>
+    </select>
+
+    <label>Expense Category</label>
+    <select name="category" id="category" required>
+      <option value="">Loading Categories...</option>
+    </select>
+
+    <label>Mode of Payment</label>
+    <select name="paymentMode" id="paymentMode" required>
+      <option value="">Loading Payment Modes...</option>
+    </select>
+
+    <label>Expense Date</label>
+
+    <select id="dateOption" name="dateOption" required>
+      <option value="today" selected>Today</option>
+      <option value="yesterday">Yesterday</option>
+      <option value="custom">Custom Date</option>
+    </select>
+
+    <input
+      type="date"
+      id="customDate"
+      name="expenseDate"
+      style="display:none; margin-top:10px;"
+    />
+
+    <label>Amount</label>
+    <input
+      type="number"
+      name="amount"
+      placeholder="Enter Amount"
+      step="0.01"
+      required
+    />
+
+    <label>Notes</label>
+    <input
+      type="text"
+      name="notes"
+      placeholder="Optional Notes"
+    />
+
+    <button type="submit">
+      Save Expense
+    </button>
+
+  </form>
+
+  <p id="status"></p>
+
+  <div class="footer">
+    Shared Expense Tracker
+  </div>
 
 </div>
 
+<script>
 
-<!-- ========================================= -->
-<!-- JAVASCRIPT FILES -->
-<!-- ========================================= -->
+// ===================================
+// Apps Script URLs
+// ===================================
 
-<script src="charts.js"></script>
+const submitURL =
+"https://script.google.com/macros/s/AKfycbzS8RtuT6RP6DaCYK90Bj6hkmQeStrA5JPQNmDXi12NwYKMM6ktIDQjF9xWh3AU1mSLLw/exec";
 
-<script src="app.js"></script>
+const configURL =
+"https://script.google.com/macros/s/AKfycby0EW_ORUu2uVtzyFUkvMx-uXty1KCe9QIYCptiKNWEB-BAKoEih8AeJnsqcZCHtpBPFQ/exec";
+
+
+// ===================================
+// Load Dropdowns
+// ===================================
+
+async function loadDropdowns() {
+
+  try {
+
+    const response =
+      await fetch(configURL);
+
+    const data =
+      await response.json();
+
+    populateDropdown(
+      "person",
+      data.users
+    );
+
+    populateDropdown(
+      "category",
+      data.categories
+    );
+
+    populateDropdown(
+      "paymentMode",
+      data.paymentModes
+    );
+
+  }
+  catch(error) {
+
+    console.error(error);
+
+    document.getElementById("status")
+      .innerText =
+      "Unable to load dropdown data";
+
+  }
+
+}
+
+
+// ===================================
+// Populate Dropdown Helper
+// ===================================
+
+function populateDropdown(id, values) {
+
+  const dropdown =
+    document.getElementById(id);
+
+  dropdown.innerHTML =
+    '<option value="">Select</option>';
+
+  values.forEach(value => {
+
+    const option =
+      document.createElement("option");
+
+    option.value = value;
+    option.textContent = value;
+
+    dropdown.appendChild(option);
+
+  });
+
+}
+
+
+// ===================================
+// Date Handling
+// ===================================
+
+const dateOption =
+  document.getElementById("dateOption");
+
+const customDate =
+  document.getElementById("customDate");
+
+dateOption.addEventListener(
+  "change",
+  function() {
+
+    if(this.value === "custom") {
+
+      customDate.style.display =
+        "block";
+
+      customDate.required = true;
+
+    }
+    else {
+
+      customDate.style.display =
+        "none";
+
+      customDate.required = false;
+
+    }
+
+  }
+);
+
+
+// ===================================
+// Form Submit
+// ===================================
+
+document
+.getElementById("expenseForm")
+.addEventListener(
+"submit",
+async (e) => {
+
+  e.preventDefault();
+
+  const formData =
+    Object.fromEntries(
+      new FormData(e.target)
+    );
+
+  let expenseDate;
+
+  switch(formData.dateOption) {
+
+    case "today":
+
+      expenseDate =
+        new Date()
+        .toISOString()
+        .split("T")[0];
+
+      break;
+
+    case "yesterday":
+
+      const yesterday =
+        new Date();
+
+      yesterday.setDate(
+        yesterday.getDate() - 1
+      );
+
+      expenseDate =
+        yesterday
+        .toISOString()
+        .split("T")[0];
+
+      break;
+
+    case "custom":
+
+      expenseDate =
+        formData.expenseDate;
+
+      break;
+
+  }
+
+  formData.expenseDate =
+    expenseDate;
+
+  document
+    .getElementById("status")
+    .innerText =
+    "Saving Expense...";
+  console.log("Submitting:", formData);
+  console.log("URL:", submitURL);
+  try {
+
+    await fetch(
+      submitURL,
+      {
+        method: "POST",
+        mode: "no-cors",
+        headers: {
+          "Content-Type":
+          "application/json"
+        },
+        body:
+          JSON.stringify(
+            formData
+          )
+      }
+    );
+
+    const status =
+      document.getElementById(
+        "status"
+      );
+
+    status.className =
+      "success";
+
+    status.innerText =
+      "✅ Expense Saved Successfully";
+
+    e.target.reset();
+
+    document
+      .getElementById(
+        "dateOption"
+      )
+      .value =
+      "today";
+
+    customDate.style.display =
+      "none";
+
+  }
+  catch(err) {
+
+    console.error(err);
+
+    const status =
+      document.getElementById(
+        "status"
+      );
+
+    status.className =
+      "error";
+
+    status.innerText =
+      "❌ Error Saving Expense";
+
+  }
+
+});
+
+
+// ===================================
+// Initial Load
+// ===================================
+
+loadDropdowns();
+
+</script>
 
 </body>
-
 </html>
